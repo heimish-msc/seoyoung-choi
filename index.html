@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko" class="js-loading">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>최서영</title>
+  <meta name="description" content="Organist Seoyoung Choi (최서영) — Korea · Europe · USA">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body data-page="home">
+<header class="site-header" id="site-header"></header>
+<main id="main" class="wrap">
+
+  <!-- PROFILE / HERO -->
+  <section class="card hero" aria-labelledby="hero-title">
+    <div class="hero__photos">
+      <div class="media" style="--img:url('assets/images/hero-1.jpg')" role="img" aria-label=""></div>
+      <div class="media" style="--img:url('assets/images/hero-2.jpg')" role="img" aria-label=""></div>
+      <div class="media" style="--img:url('assets/images/hero-3.jpg')" role="img" aria-label=""></div>
+    </div>
+    <div class="hero__meta">
+      <div class="hero__contact">
+        <span data-i18n="labels.contact"></span>: <a data-site="email"></a><br>
+        <span data-i18n="labels.TEL"></span>: <a data-site="TEL"></a>
+      </div>
+      <div class="socials" data-socials></div>
+    </div>
+    <div class="hero__title">
+      <h1 class="display display--name" id="hero-title" data-i18n="common.name"></h1>
+      <p class="label" data-i18n="home.role"></p>
+    </div>
+  </section>
+
+  <!-- RECENT PERFORMANCES -->
+  <section class="card" aria-labelledby="recent-title">
+    <div class="recent">
+      <div class="media recent__img" style="--img:url('assets/images/recent-main.jpg')"></div>
+      <div class="recent__text">
+        <p data-i18n="home.recentText"></p>
+        <a class="link-arrow" href="about.html"><span data-i18n="home.recentLink"></span> →</a>
+      </div>
+      <div class="side-list">
+        <a href="events.html" class="side-item">
+          <span class="media" style="--img:url('assets/images/venue-1.jpg')"></span>
+          <span class="caption" data-venue="0"></span>
+        </a>
+        <a href="events.html" class="side-item">
+          <span class="media" style="--img:url('assets/images/venue-2.jpg')"></span>
+          <span class="caption" data-venue="1"></span>
+        </a>
+        <a href="events.html" class="side-item">
+          <span class="media" style="--img:url('assets/images/venue-3.jpg')"></span>
+          <span class="caption" data-venue="9"></span>
+        </a>
+      </div>
+      <h2 class="display display--lg recent__title" id="recent-title" data-i18n="home.recentTitle"></h2>
+    </div>
+  </section>
+
+  <!-- VIDEOS & RECORDINGS -->
+  <section class="card" aria-labelledby="videos-title">
+    <div class="card__head">
+      <h2 class="display display--fill" id="videos-title" data-i18n="home.videosTitle"></h2>
+      <a class="link-arrow" href="videos.html"><span data-i18n="home.videosLink"></span> →</a>
+    </div>
+    <div class="vgrid" id="home-videos"></div>
+  </section>
+
+  <!-- UPCOMING -->
+  <section class="card" aria-labelledby="upcoming-title">
+    <div class="card__head">
+      <h2 class="display display--md" id="upcoming-title" data-i18n="home.upcomingTitle"></h2>
+      <a class="link-arrow" href="events.html"><span data-i18n="home.upcomingLink"></span> →</a>
+    </div>
+    <ul class="events" id="home-upcoming"></ul>
+  </section>
+
+</main>
+<footer class="site-footer" id="site-footer"></footer>
+</body>
+</html>
