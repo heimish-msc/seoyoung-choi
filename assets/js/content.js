@@ -79,7 +79,6 @@
         { k: "extra", label: "추가 수학", type: "list", item: eduItem },
         { k: "awards", label: "수상 & 경력", type: "list", item: [{ k: "text", label: "내용", ml: true }] },
         { k: "orchestras", label: "협연", type: "list", item: [{ k: "name", label: "오케스트라", ml: true }, { k: "orig", label: "원어 이름", ml: true }] },
-        { k: "venues", label: "주요 연주 장소", type: "list", item: [{ k: "ko", label: "장소 (한국어)" }, { k: "orig", label: "장소 (원어)" }, { k: "city", label: "도시", ml: true }] },
         { k: "teachers_korea", label: "사사 — 한국", type: "list", item: teacherItem },
         { k: "teachers_france", label: "사사 — 프랑스", type: "list", item: teacherItem },
         { k: "teachers_germany", label: "사사 — 독일", type: "list", item: teacherItem }

@@ -202,7 +202,7 @@
       $("#awards").innerHTML = t("about.awards").map((a) => `<li>${esc(a)}</li>`).join("");
       $("#orchestras").innerHTML = t("about.orchestras")
         .map((o) => `<li>${esc(o.name)}${o.orig ? `<small>${esc(o.orig)}</small>` : ""}</li>`).join("");
-      venueGrid($("#venues"));
+      if ($("#venues")) venueGrid($("#venues"));
       $("#teachers").innerHTML = ["korea", "france", "germany"].map((k) => `
         <div class="teachers__col">
           <h3 class="label">${esc(t("about." + k))}</h3>
