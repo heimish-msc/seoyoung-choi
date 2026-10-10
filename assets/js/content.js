@@ -41,6 +41,17 @@
 
   const SECTIONS = [
     {
+      key: "gallery", label: "사진 아카이브",
+      help: "Photos 페이지의 연주 사진입니다. '여러 장 올리기'로 한 번에 추가한 뒤 장소·도시·날짜를 적어 주세요. 같은 장소 이름끼리 묶여 필터 버튼이 생깁니다.",
+      fields: [{ k: "items", label: "사진", type: "list", bulk: true, item: [
+        { k: "image", label: "사진", type: "image" },
+        { k: "venue", label: "장소", ml: true },
+        { k: "city", label: "도시", ml: true },
+        { k: "date", label: "날짜 (예: 2025.05)" },
+        { k: "caption", label: "설명 (선택)", ml: true }
+      ] }]
+    },
+    {
       key: "videos", label: "영상",
       help: "유튜브 주소를 붙여넣으면 썸네일이 자동으로 표시됩니다. 위·아래 버튼으로 순서를 바꿀 수 있어요.",
       fields: [{ k: "items", label: "영상 목록", type: "list", item: [
@@ -85,7 +96,7 @@
       ]
     },
     {
-      key: "photos", label: "사진", type: "photos",
+      key: "photos", label: "첫 화면 사진", type: "photos",
       help: "사진을 고르면 자동으로 크기를 줄여 업로드합니다. '저장'을 눌러야 사이트에 반영됩니다."
     }
   ];
@@ -101,6 +112,7 @@
   }));
 
   const DEFAULTS = {
+    gallery: { items: clone(GALLERY) },
     videos: { items: VIDEOS.map((v) => ({ youtube: v.youtube, title: clone(v.title), sub: clone(v.sub) })) },
     home: {
       role: ml((l) => I[l].home.role)
@@ -160,6 +172,10 @@
       window.VIDEOS = d.videos.items
         .map((v) => ({ youtube: ytId(v.youtube), img: "", cat: "recital", title: v.title || {}, sub: v.sub || {} }))
         .filter((v) => v.youtube);
+    }
+
+    if (d.gallery && Array.isArray(d.gallery.items)) {
+      window.GALLERY = d.gallery.items.filter((g) => g && g.image);
     }
 
     if (d.contact) Object.keys(d.contact).forEach((k) => { if (d.contact[k]) SITE[k] = d.contact[k]; });

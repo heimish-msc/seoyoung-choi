@@ -44,6 +44,14 @@ window.createContentEditor = function (sb, ui) {
 
   function field(f, value, path) {
     if (f.type === "list") return listField(f, value || [], path);
+    if (f.type === "image") return `
+      <div class="ce-field ce-field--image">
+        <span class="label">${esc(f.label)}</span>
+        <div class="ce-image">
+          <div class="ce-image__img" style="background-image:url('${esc(previewUrl(value))}')"></div>
+          <label class="ce-upload">${value ? "사진 바꾸기" : "사진 올리기"}<input type="file" accept="image/*" data-img-path="${esc(path)}"></label>
+        </div>
+      </div>`;
     if (f.ml) {
       const v = value || {};
       return `
@@ -72,7 +80,10 @@ window.createContentEditor = function (sb, ui) {
             </div>
             ${f.item.map((sf) => field(sf, it[sf.k], `${path}.${i}.${sf.k}`)).join("")}
           </div>`).join("")}
-        <button type="button" class="ce-add" data-act="add" data-path="${esc(path)}">+ ${esc(f.label)} 항목 추가</button>
+        <div class="ce-add-row">
+          <button type="button" class="ce-add" data-act="add" data-path="${esc(path)}">+ ${esc(f.label)} 항목 추가</button>
+          ${f.bulk ? `<label class="ce-upload ce-upload--bulk">여러 장 올리기<input type="file" accept="image/*" multiple data-bulk-path="${esc(path)}"></label>` : ""}
+        </div>
       </div>`;
   }
 
@@ -87,7 +98,7 @@ window.createContentEditor = function (sb, ui) {
           <div class="ce-photo__body">
             <span class="label">${esc(p.label)}</span>
             <div class="ce-photo__btns">
-              <label class="ce-upload">사진 바꾸기<input type="file" accept="image/*" data-photo="${p.k}"></label>
+              <label class="ce-upload">사진 바꾸기<input type="file" accept="image/*" data-img-path="${p.k}.url"></label>
               ${isDefault ? "" : `<button type="button" class="admin-textbtn" data-act="photo-default" data-key="${p.k}">기본 사진으로</button>`}
             </div>
             ${p.venue != null ? field({ k: "caption", label: "사진 설명", ml: true }, v.caption, `${p.k}.caption`) : ""}
@@ -114,19 +125,47 @@ window.createContentEditor = function (sb, ui) {
     });
   }
 
-  async function upload(key, file) {
+  // 사진 한 장을 줄여서 저장소에 올리고 공개 주소를 돌려줌
+  async function uploadFile(file) {
+    const blob = await resizeImage(file);
+    const path = `${section.key}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+    const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false });
+    if (error) throw error;
+    return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  }
+
+  async function uploadTo(path, file) {
     ui.msg("사진을 올리는 중입니다…");
     try {
-      const blob = await resizeImage(file);
-      const path = `photos/${key}-${Date.now()}.jpg`;
-      const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false });
-      if (error) throw error;
-      const { data } = sb.storage.from(BUCKET).getPublicUrl(path);
-      state[key] = Object.assign({}, state[key], { url: data.publicUrl });
+      setAt(state, path, await uploadFile(file));
       render();
       ui.msg("사진을 올렸습니다. '저장'을 눌러야 사이트에 반영됩니다.");
     } catch (e) {
       ui.msg(ui.errText(e), true);
+    }
+  }
+
+  // 여러 장 한 번에: 사진마다 새 항목을 만들어 목록 끝에 추가
+  async function uploadMany(path, files) {
+    const f = defs[path];
+    const imgKey = f.item.find((x) => x.type === "image").k;
+    const list = getAt(state, path) || [];
+    let done = 0;
+    try {
+      for (const file of files) {
+        ui.msg(`사진을 올리는 중입니다… (${done + 1}/${files.length})`);
+        const item = emptyItem(f.item);
+        item[imgKey] = await uploadFile(file);
+        list.push(item);
+        done++;
+      }
+      setAt(state, path, list);
+      render();
+      ui.msg(`사진 ${done}장을 올렸습니다. 장소·날짜를 적고 '저장'을 눌러 주세요.`);
+    } catch (e) {
+      setAt(state, path, list);
+      render();
+      ui.msg(`${done}장까지 올렸습니다. ` + ui.errText(e), true);
     }
   }
 
@@ -146,8 +185,9 @@ window.createContentEditor = function (sb, ui) {
   });
 
   root.addEventListener("change", (e) => {
-    const key = e.target.dataset.photo;
-    if (key && e.target.files[0]) upload(key, e.target.files[0]);
+    const { imgPath, bulkPath } = e.target.dataset;
+    if (imgPath && e.target.files[0]) uploadTo(imgPath, e.target.files[0]);
+    if (bulkPath && e.target.files.length) uploadMany(bulkPath, [...e.target.files]);
   });
 
   root.addEventListener("click", (e) => {

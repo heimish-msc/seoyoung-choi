@@ -125,3 +125,10 @@
 .m-body { white-space: pre-wrap; line-height: 1.65; margin: 8px 0 14px; max-width: 70ch; }
 .m-btns { display: flex; align-items: center; gap: 18px; }
 .m-btns .btn { padding: 10px 16px; }
+
+/* 사진 칸 (사진 아카이브) */
+.ce-image { display: flex; align-items: flex-end; gap: 14px; }
+.ce-image__img { width: 140px; aspect-ratio: 4 / 3; background: #ccc center / contain no-repeat; border: 1px solid var(--ink); }
+.ce-add-row { display: flex; gap: 10px; align-items: stretch; }
+.ce-add-row .ce-add { flex: 1; }
+.ce-upload--bulk { display: flex; align-items: center; padding: 9px 16px; }

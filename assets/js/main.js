@@ -4,8 +4,8 @@
   const LANGS = ["ko", "en", "fr"];
   const LOCALES = { ko: "ko-KR", en: "en-GB", fr: "fr-FR" };
   // 첫 화면(index.html)이 About — 별도 Home 메뉴 없음
-  const PAGES = ["about", "videos", "events", "contact"];
-  const HREF = { about: "index.html", videos: "videos.html", events: "events.html", contact: "contact.html" };
+  const PAGES = ["about", "photos", "videos", "events", "contact"];
+  const HREF = { about: "index.html", photos: "photos.html", videos: "videos.html", events: "events.html", contact: "contact.html" };
   const page = document.body.dataset.page;
 
   /* ---------------------------------------------------- helpers */
@@ -210,6 +210,47 @@
         </div>`).join("");
     },
 
+    photos() {
+      const list = window.GALLERY || [];
+      const placeKey = (g) => (g.venue && (g.venue.en || g.venue.ko || g.venue.fr)) || "";
+      // 장소별 필터 (장소가 2곳 이상일 때만 표시)
+      const placeMap = new Map(); // 같은 장소는 처음 나온 사진의 장소 이름을 사용
+      list.filter(placeKey).forEach((g) => { if (!placeMap.has(placeKey(g))) placeMap.set(placeKey(g), g.venue); });
+      const places = [...placeMap.entries()];
+      const bar = $("#gfilters");
+      bar.hidden = places.length < 2;
+      const current = bar.dataset.current || "all";
+      bar.innerHTML = [`<button type="button" data-filter="all">${esc(t("photos.all"))}</button>`,
+        ...places.map(([k, v]) => `<button type="button" data-filter="${esc(k)}">${esc(L(v))}</button>`)].join("");
+
+      const grid = $("#gallery");
+      const meta = (g) => [[L(g.venue), L(g.city)].filter(Boolean).join(", "), g.date].filter(Boolean).join(" · ");
+      grid.innerHTML = list.length
+        ? list.map((g, i) => `
+          <figure class="gitem" data-place="${esc(placeKey(g))}">
+            <button type="button" class="gitem__btn" data-open="${i}" aria-label="${esc(meta(g) || t("photos.title"))}">
+              <img src="${esc(g.image)}" alt="${esc([L(g.caption), meta(g)].filter(Boolean).join(" — "))}" loading="lazy" decoding="async">
+            </button>
+            ${meta(g) || L(g.caption) ? `<figcaption>${meta(g) ? `<span class="gitem__meta">${esc(meta(g))}</span>` : ""}${L(g.caption) ? `<span class="gitem__cap">${esc(L(g.caption))}</span>` : ""}</figcaption>` : ""}
+          </figure>`).join("")
+        : `<p class="event--empty">${esc(t("photos.empty"))}</p>`;
+
+      const apply = (c) => {
+        bar.dataset.current = c;
+        $$("button", bar).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === c)));
+        $$(".gitem", grid).forEach((it) => (it.hidden = c !== "all" && it.dataset.place !== c));
+      };
+      $$("button", bar).forEach((b) => b.addEventListener("click", () => apply(b.dataset.filter)));
+      apply(places.some(([k]) => k === current) ? current : "all");
+      if (!grid.dataset.bound) {
+        grid.dataset.bound = "1";
+        grid.addEventListener("click", (e) => {
+          const b = e.target.closest("[data-open]");
+          if (b) openLightbox(+b.dataset.open, meta);
+        });
+      }
+    },
+
     videos() {
       const cats = ["all", ...new Set(VIDEOS.map((v) => v.cat))];
       const bar = $("#vfilters");
@@ -281,6 +322,53 @@
       });
     }
   };
+
+  /* ---------------------------------------------------- photo lightbox */
+  let lb = null;
+  function openLightbox(index, meta) {
+    // 필터로 보이는 사진만 넘겨보기
+    const visible = $$(".gitem:not([hidden]) [data-open]").map((b) => +b.dataset.open);
+    let pos = Math.max(0, visible.indexOf(index));
+    if (!lb) {
+      lb = document.createElement("div");
+      lb.className = "lightbox";
+      lb.innerHTML = `
+        <button type="button" class="lightbox__close" data-lb="close"></button>
+        <button type="button" class="lightbox__nav lightbox__nav--prev" data-lb="prev">←</button>
+        <figure class="lightbox__fig"><img alt=""><figcaption></figcaption></figure>
+        <button type="button" class="lightbox__nav lightbox__nav--next" data-lb="next">→</button>`;
+      document.body.appendChild(lb);
+      lb.addEventListener("click", (e) => {
+        const act = e.target.closest("[data-lb]")?.dataset.lb;
+        if (act === "close" || e.target === lb) lb.close();
+        if (act === "prev") lb.go(-1);
+        if (act === "next") lb.go(1);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (lb.hidden) return;
+        if (e.key === "Escape") lb.close();
+        if (e.key === "ArrowLeft") lb.go(-1);
+        if (e.key === "ArrowRight") lb.go(1);
+      });
+    }
+    const show = () => {
+      const g = GALLERY[visible[pos]];
+      const img = $("img", lb);
+      img.src = g.image;
+      img.alt = [L(g.caption), meta(g)].filter(Boolean).join(" — ");
+      $("figcaption", lb).textContent = [meta(g), L(g.caption)].filter(Boolean).join(" — ");
+      $(".lightbox__close", lb).textContent = t("photos.close");
+      $("[data-lb=prev]", lb).setAttribute("aria-label", t("photos.prev"));
+      $("[data-lb=next]", lb).setAttribute("aria-label", t("photos.next"));
+      $$(".lightbox__nav", lb).forEach((b) => (b.hidden = visible.length < 2));
+    };
+    lb.go = (d) => { pos = (pos + d + visible.length) % visible.length; show(); };
+    lb.close = () => { lb.hidden = true; document.body.classList.remove("menu-open"); };
+    lb.hidden = false;
+    document.body.classList.add("menu-open");
+    show();
+    $(".lightbox__close", lb).focus();
+  }
 
   /* ---------------------------------------------------- language */
   function setLang(next) {

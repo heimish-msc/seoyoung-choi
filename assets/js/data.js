@@ -28,6 +28,21 @@ window.VIDEOS = [
   }
 ];
 
+/* 사진 아카이브 (Photos 페이지) — 관리자 페이지 '사진 아카이브' 탭에서 추가·수정
+   image: 사진 경로 / venue·city: 장소·도시 / date: 날짜(예: 2025.05) / caption: 설명
+   아래는 처음 넣어 둔 사진이며, 장소는 관리자 페이지에서 입력해 주세요. */
+window.GALLERY = [
+  "assets/images/hero-2.jpg",
+  "assets/images/recent-main.jpg",
+  "assets/images/venue-2.jpg",
+  "assets/images/hero-3.jpg",
+  "assets/images/venue-1.jpg",
+  "assets/images/hero-1.jpg"
+].map((image) => ({
+  image, date: "",
+  venue: { ko: "", en: "", fr: "" }, city: { ko: "", en: "", fr: "" }, caption: { ko: "", en: "", fr: "" }
+}));
+
 /* 공연 일정은 Supabase 데이터베이스에 있습니다.
    관리자 페이지(/admin)에서 입력하면 홈 '예정된 공연'과 공연 페이지에 바로 반영됩니다. */
 

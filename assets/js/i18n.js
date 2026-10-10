@@ -8,11 +8,12 @@ window.I18N = {
     meta: {
       home: "최서영 — 오르가니스트",
       about: "소개 — 최서영",
+      photos: "사진 — 최서영",
       videos: "영상 — 최서영",
       events: "공연 — 최서영",
       contact: "연락처 — 최서영"
     },
-    nav: { home: "홈", about: "소개", videos: "영상", events: "공연", contact: "연락처" },
+    nav: { home: "홈", about: "소개", photos: "사진", videos: "영상", events: "공연", contact: "연락처" },
     common: {
       name: "최서영",
       nameLatin: "Seoyoung Choi",
@@ -76,6 +77,14 @@ window.I18N = {
       france: "프랑스",
       germany: "독일"
     },
+    photos: {
+      title: "PHOTOS",
+      all: "전체",
+      empty: "사진이 곧 업데이트됩니다.",
+      close: "닫기",
+      prev: "이전 사진",
+      next: "다음 사진"
+    },
     videos: {
       title: "VIDEOS",
       sub: "공연 영상 & 레코딩",
@@ -118,11 +127,12 @@ window.I18N = {
     meta: {
       home: "Seoyoung Choi — Organist",
       about: "About — Seoyoung Choi",
+      photos: "Photos — Seoyoung Choi",
       videos: "Videos — Seoyoung Choi",
       events: "Events — Seoyoung Choi",
       contact: "Contact — Seoyoung Choi"
     },
-    nav: { home: "Home", about: "About", videos: "Videos", events: "Events", contact: "Contact" },
+    nav: { home: "Home", about: "About", photos: "Photos", videos: "Videos", events: "Events", contact: "Contact" },
     common: {
       name: "Seoyoung Choi",
       nameLatin: "Seoyoung Choi",
@@ -188,6 +198,14 @@ window.I18N = {
       france: "France",
       germany: "Germany"
     },
+    photos: {
+      title: "Photos",
+      all: "All",
+      empty: "Photos will be added soon.",
+      close: "Close",
+      prev: "Previous photo",
+      next: "Next photo"
+    },
     videos: {
       title: "Videos",
       sub: "Performance videos & recordings",
@@ -231,11 +249,12 @@ window.I18N = {
     meta: {
       home: "Seoyoung Choi — Organiste",
       about: "Biographie — Seoyoung Choi",
+      photos: "Photos — Seoyoung Choi",
       videos: "Vidéos — Seoyoung Choi",
       events: "Concerts — Seoyoung Choi",
       contact: "Contact — Seoyoung Choi"
     },
-    nav: { home: "Accueil", about: "Biographie", videos: "Vidéos", events: "Concerts", contact: "Contact" },
+    nav: { home: "Accueil", about: "Biographie", photos: "Photos", videos: "Vidéos", events: "Concerts", contact: "Contact" },
     common: {
       name: "Seoyoung Choi",
       nameLatin: "Seoyoung Choi",
@@ -301,6 +320,14 @@ window.I18N = {
       korea: "Corée",
       france: "France",
       germany: "Allemagne"
+    },
+    photos: {
+      title: "Photos",
+      all: "Tout",
+      empty: "Les photos seront bientôt ajoutées.",
+      close: "Fermer",
+      prev: "Photo précédente",
+      next: "Photo suivante"
     },
     videos: {
       title: "Vidéos",

@@ -194,6 +194,7 @@ main > .card:first-child { margin-top: clamp(20px, 3vw, 36px); }
 }
 .hero__contact { grid-column: 2; font-size: 12.5px; font-weight: 500; line-height: 1.3; text-transform: uppercase; }
 .hero__contact a:hover { text-decoration: underline; }
+.hero__meta > .socials { grid-column: -2 / -1; } /* 연락처 줄이 없어도 SNS 아이콘은 오른쪽 끝 */
 .socials { display: flex; gap: 10px; justify-content: flex-end; align-items: flex-start; }
 .socials a { display: block; width: 26px; height: 26px; transition: transform .2s ease; }
 .socials a:hover { transform: translateY(-2px); }
@@ -432,4 +433,39 @@ html[lang="ko"] .bio { line-height: 1.8; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
   html { scroll-behavior: auto; }
+}
+
+/* ---------------------------------------------------- photos (archive) */
+.gallery { columns: 3; column-gap: var(--gap); }
+.gitem { break-inside: avoid; margin: 0 0 clamp(18px, 2.4cqi, 28px); }
+.gitem[hidden] { display: none; }
+.gitem__btn { display: block; width: 100%; padding: 0; border: 0; background: #d9d8d3; cursor: zoom-in; }
+.gitem__btn img { display: block; width: 100%; height: auto; transition: opacity .25s ease; }
+.gitem__btn:hover img { opacity: .88; }
+.gitem figcaption { margin-top: 7px; }
+.gitem__meta { display: block; font-size: 11.5px; font-weight: 600; text-transform: uppercase; line-height: 1.3; }
+.gitem__cap { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+#gfilters[hidden], .card__head:has(> #gfilters[hidden]) { display: none; }
+@container (max-width: 900px) { .gallery { columns: 2; } }
+@container (max-width: 480px) { .gallery { columns: 1; } }
+
+.lightbox {
+  position: fixed; inset: 0; z-index: 100; background: rgba(12, 12, 12, .94);
+  display: grid; grid-template-columns: 64px 1fr 64px; align-items: center; padding: 56px 8px 24px;
+}
+.lightbox[hidden] { display: none; }
+.lightbox__fig { margin: 0; grid-column: 2; text-align: center; min-width: 0; }
+.lightbox__fig img { max-width: 100%; max-height: calc(100vh - 140px); object-fit: contain; display: inline-block; }
+.lightbox__fig figcaption { color: #eee; font-size: 13px; margin-top: 12px; }
+.lightbox__close {
+  position: absolute; top: 14px; right: 16px; background: none; border: 1.5px solid #fff; color: #fff;
+  padding: 6px 12px; font-size: 11.5px; font-weight: 600; text-transform: uppercase; cursor: pointer;
+}
+.lightbox__nav { background: none; border: 0; color: #fff; font-size: 28px; cursor: pointer; padding: 12px; }
+.lightbox__nav[hidden] { visibility: hidden; display: block; }
+.lightbox__nav--prev { grid-column: 1; }
+.lightbox__nav--next { grid-column: 3; }
+@media (max-width: 600px) {
+  .lightbox { grid-template-columns: 40px 1fr 40px; }
+  .lightbox__nav { font-size: 22px; padding: 6px; }
 }
