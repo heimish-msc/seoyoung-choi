@@ -17,8 +17,7 @@
     if (LANGS.includes(q)) return q;
     const s = store.get();
     if (LANGS.includes(s)) return s;
-    const n = (navigator.language || "ko").slice(0, 2).toLowerCase();
-    return LANGS.includes(n) ? n : "en";
+    return "en"; // 처음 방문하면 영어로 시작 (이후엔 고른 언어를 기억)
   }
   let lang = detectLang();
 
