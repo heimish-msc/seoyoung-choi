@@ -19,7 +19,42 @@
 <body data-page="contact">
 <header class="site-header" id="site-header"></header>
 <main id="main" class="wrap">
-  <!-- 내용 준비 중 -->
+
+  <section class="card" aria-labelledby="page-title">
+    <div class="page-head">
+      <div>
+        <h1 class="display" id="page-title" data-i18n="contact.title"></h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="contact contact--noimg">
+      <div class="contact__body">
+        <p class="contact__intro" data-i18n="contact.intro"></p>
+        <dl class="info">
+          <div class="info-row"><dt class="label" data-i18n="contact.email"></dt><dd><a data-site="email"></a></dd></div>
+          <div class="info-row" data-site-line="TEL"><dt class="label" data-i18n="contact.TEL"></dt><dd><a data-site="TEL"></a></dd></div>
+          <div class="info-row"><dt class="label" data-i18n="contact.social"></dt><dd><div class="socials" data-socials></div></dd></div>
+        </dl>
+      </div>
+
+      <!-- 문의는 Supabase messages 테이블에 저장되어 관리자 페이지 '문의' 탭에서 확인 -->
+      <form class="form contact__form" id="contact-form">
+        <h2 class="label subhead full" data-i18n="contact.formTitle"></h2>
+        <div class="field"><label class="label" for="f-name" data-i18n="contact.fName"></label><input id="f-name" name="name" autocomplete="name" maxlength="100" required></div>
+        <div class="field"><label class="label" for="f-email" data-i18n="contact.fEmail"></label><input id="f-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+        <div class="field full"><label class="label" for="f-subject" data-i18n="contact.fSubject"></label><input id="f-subject" name="subject" maxlength="200"></div>
+        <div class="field full"><label class="label" for="f-message" data-i18n="contact.fMessage"></label><textarea id="f-message" name="message" maxlength="5000" required></textarea></div>
+        <!-- 스팸 방지용 숨은 칸 (사람은 보지 못함) -->
+        <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <button class="btn" type="submit"><span data-i18n="contact.send"></span> →</button>
+        <p class="form__note full" data-i18n="contact.note"></p>
+        <p class="form__status full" id="form-status" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+
 </main>
 <footer class="site-footer" id="site-footer"></footer>
 </body>

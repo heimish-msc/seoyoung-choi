@@ -4,9 +4,8 @@
    ========================================================= */
 
 window.SITE = {
-  // TODO: 실제 연락처로 교체
-  email: "contact@example.com",
-  TEL: "+82 10-0000-0000",
+  email: "3634syoung@gmail.com",
+  TEL: "", // 비워 두면 전화번호 줄이 표시되지 않음
   instagram: "https://www.instagram.com/__celine_sy/",
   youtube: "https://www.youtube.com/@celine.1117"
 };

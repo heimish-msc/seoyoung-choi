@@ -3,8 +3,9 @@
 
   const LANGS = ["ko", "en", "fr"];
   const LOCALES = { ko: "ko-KR", en: "en-GB", fr: "fr-FR" };
-  const PAGES = ["home", "about", "videos", "events", "contact"];
-  const HREF = { home: "index.html", about: "about.html", videos: "videos.html", events: "events.html", contact: "contact.html" };
+  // 첫 화면(index.html)이 About — 별도 Home 메뉴 없음
+  const PAGES = ["about", "videos", "events", "contact"];
+  const HREF = { about: "index.html", videos: "videos.html", events: "events.html", contact: "contact.html" };
   const page = document.body.dataset.page;
 
   /* ---------------------------------------------------- helpers */
@@ -104,6 +105,7 @@
         el.href = key === "email" ? `mailto:${val}` : key === "TEL" ? `tel:${val.replace(/[^\d+]/g, "")}` : val;
       }
     });
+    $$("[data-site-line]").forEach((el) => (el.hidden = !SITE[el.dataset.siteLine])); // 값이 없으면 줄 숨김
     $$("[data-socials]").forEach((el) => (el.innerHTML = socialsHTML()));
     // 관리자 페이지에서 바꿀 수 있는 사진과 사진 설명
     $$("[data-photo]").forEach((el) => {
@@ -187,16 +189,6 @@
 
   /* ---------------------------------------------------- page renderers */
   const render = {
-    home() {
-      // 8개 이상이면 시안 배치(작게·작게·넓게…), 적으면 개수에 맞춰 크게
-      const list = VIDEOS.slice(0, 8);
-      const spans = list.length >= 8
-        ? ["", "", "vitem--wide", "", "", "vitem--wide", "vitem--wide", "vitem--wide"]
-        : list.map(() => (list.length <= 2 ? "vitem--half" : "vitem--wide"));
-      $("#home-videos").innerHTML = list.map((v, i) => videoItem(v, i, spans[i])).join("");
-      eventList($("#home-upcoming"), splitEvents().upcoming.slice(0, 3));
-    },
-
     about() {
       $("#bio").innerHTML = t("about.bio").map((p) => `<p>${esc(p)}</p>`).join("");
       const rows = (list) => list.map((r) => `
@@ -248,14 +240,44 @@
 
     contact() {
       const form = $("#contact-form");
-      if (!form || form.dataset.bound) return; // 내용 준비 중이면 form 없음
+      if (!form || form.dataset.bound) return;
       form.dataset.bound = "1";
-      form.addEventListener("submit", (ev) => {
+      const status = $("#form-status");
+      const say = (key, isError) => {
+        status.hidden = false;
+        status.dataset.key = key;
+        status.textContent = t("contact." + key);
+        status.classList.toggle("is-error", !!isError);
+      };
+      form.addEventListener("submit", async (ev) => {
         ev.preventDefault();
         const f = new FormData(form);
-        const subject = f.get("subject") || "Contact";
-        const body = `${f.get("message") || ""}\n\n— ${f.get("name") || ""} <${f.get("email") || ""}>`;
-        location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        if (f.get("website")) return say("sent"); // 스팸 봇이 채우는 숨은 칸
+        const btn = $("button[type=submit]", form);
+        btn.disabled = true;
+        say("sending");
+        try {
+          // 문의는 Supabase messages 테이블에 저장 → 관리자 페이지 '문의' 탭에서 확인
+          const r = await fetch(`${SUPABASE.url}/rest/v1/messages`, {
+            method: "POST",
+            headers: {
+              apikey: SUPABASE.anonKey, Authorization: `Bearer ${SUPABASE.anonKey}`,
+              "Content-Type": "application/json", Prefer: "return=minimal"
+            },
+            body: JSON.stringify({
+              name: String(f.get("name")).trim(), email: String(f.get("email")).trim(),
+              subject: String(f.get("subject") || "").trim() || null,
+              message: String(f.get("message")).trim(), lang
+            })
+          });
+          if (!r.ok) throw new Error(r.status);
+          form.reset();
+          say("sent");
+        } catch (e) {
+          say("failed", true);
+        } finally {
+          btn.disabled = false;
+        }
       });
     }
   };
@@ -275,9 +297,10 @@
       });
     });
     $$(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
-    if (page) document.title = t("meta." + page);
+    if (page) document.title = t("meta." + (document.body.dataset.title || page));
 
     fillSite();
+    $$("[data-key]#form-status").forEach((el) => (el.textContent = t("contact." + el.dataset.key)));
     if (render[page]) render[page]();
     absolutizeMedia();
   }
@@ -323,7 +346,7 @@
 
   function loadRemote() {
     if (!window.SUPABASE) return Promise.resolve();
-    const needEvents = page === "home" || page === "events";
+    const needEvents = page === "events";
     return Promise.all([
       api("site_content?select=key,value")
         .then((rows) => CONTENT.apply(Object.fromEntries(rows.map((r) => [r.key, r.value]))))

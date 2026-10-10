@@ -16,7 +16,7 @@
   <script src="assets/js/content.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </head>
-<body data-page="home">
+<body data-page="about" data-title="home">
 <header class="site-header" id="site-header"></header>
 <main id="main" class="wrap">
 
@@ -29,8 +29,8 @@
     </div>
     <div class="hero__meta">
       <div class="hero__contact">
-        <span data-i18n="labels.contact"></span>: <a data-site="email"></a><br>
-        <span data-i18n="labels.TEL"></span>: <a data-site="TEL"></a>
+        <span data-i18n="labels.contact"></span>: <a data-site="email"></a>
+        <span data-site-line="TEL"><br><span data-i18n="labels.TEL"></span>: <a data-site="TEL"></a></span>
       </div>
       <div class="socials" data-socials></div>
     </div>
@@ -40,48 +40,61 @@
     </div>
   </section>
 
-  <!-- RECENT PERFORMANCES -->
-  <section class="card" aria-labelledby="recent-title">
-    <div class="recent">
-      <div class="media recent__img" data-photo="recentMain" style="--img:url('assets/images/recent-main.jpg')"></div>
-      <div class="recent__text">
-        <p data-i18n="home.recentText"></p>
-        <a class="link-arrow" href="about.html"><span data-i18n="home.recentLink"></span> →</a>
+
+  <!-- PROFILE -->
+  <section class="card" aria-labelledby="profile-title">
+    <div class="profile">
+      <div class="media" data-photo="aboutPortrait" style="--img:url('assets/images/about-portrait.jpg')"></div>
+      <div>
+        <div class="profile__meta label">
+          <span data-i18n="common.nameLatin"></span>
+        </div>
+        <div class="bio" id="bio"></div>
       </div>
-      <div class="side-list">
-        <a href="events.html" class="side-item">
-          <span class="media" data-photo="venue1" style="--img:url('assets/images/venue-1.jpg')"></span>
-          <span class="caption" data-caption="venue1"></span>
-        </a>
-        <a href="events.html" class="side-item">
-          <span class="media" data-photo="venue2" style="--img:url('assets/images/venue-2.jpg'); --pos: 50% 30%"></span>
-          <span class="caption" data-caption="venue2"></span>
-        </a>
-        <a href="events.html" class="side-item">
-          <span class="media" data-photo="venue3" style="--img:url('assets/images/venue-3.jpg'); --pos: 50% 32%"></span>
-          <span class="caption" data-caption="venue3"></span>
-        </a>
-      </div>
-      <h2 class="display display--lg recent__title" id="recent-title" data-i18n="home.recentTitle"></h2>
+    </div>
+    <div class="profile__title">
+      <h2 class="display" id="profile-title" data-i18n="about.title"></h2>
     </div>
   </section>
 
-  <!-- VIDEOS & RECORDINGS -->
-  <section class="card" aria-labelledby="videos-title">
+  <!-- EDUCATION -->
+  <section class="card" aria-labelledby="edu-title">
     <div class="card__head">
-      <h2 class="display display--fill" id="videos-title" data-i18n="home.videosTitle"></h2>
-      <a class="link-arrow" href="videos.html"><span data-i18n="home.videosLink"></span> →</a>
+      <h2 class="display display--md" id="edu-title" data-i18n="about.eduTitle"></h2>
     </div>
-    <div class="vgrid" id="home-videos"></div>
+    <ul class="rows" id="education"></ul>
+    <h3 class="label subhead" data-i18n="about.extraTitle"></h3>
+    <ul class="rows" id="extra"></ul>
   </section>
 
-  <!-- UPCOMING -->
-  <section class="card" aria-labelledby="upcoming-title">
-    <div class="card__head">
-      <h2 class="display display--md" id="upcoming-title" data-i18n="home.upcomingTitle"></h2>
-      <a class="link-arrow" href="events.html"><span data-i18n="home.upcomingLink"></span> →</a>
+  <!-- PRIZES / ORCHESTRA -->
+  <section class="card">
+    <div class="split">
+      <div>
+        <h2 class="display display--sm" data-i18n="about.awardsTitle"></h2>
+        <ul class="ulist" id="awards"></ul>
+      </div>
+      <div>
+        <h2 class="display display--sm" data-i18n="about.orchTitle"></h2>
+        <ul class="ulist" id="orchestras"></ul>
+      </div>
     </div>
-    <ul class="events" id="home-upcoming"></ul>
+  </section>
+
+  <!-- VENUES -->
+  <section class="card" aria-labelledby="venues-title">
+    <div class="card__head">
+      <h2 class="display display--md" id="venues-title" data-i18n="about.venuesTitle"></h2>
+    </div>
+    <ul class="venues" id="venues"></ul>
+  </section>
+
+  <!-- TEACHERS -->
+  <section class="card" aria-labelledby="teachers-title">
+    <div class="card__head">
+      <h2 class="display display--md" id="teachers-title" data-i18n="about.teachersTitle"></h2>
+    </div>
+    <div class="teachers" id="teachers"></div>
   </section>
 
 </main>

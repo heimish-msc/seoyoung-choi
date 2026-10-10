@@ -23,7 +23,7 @@
   function show(view) {
     current = view;
     $$(".admin-view").forEach((el) => (el.hidden = el.id !== "view-" + view));
-    const inside = ["list", "form", "content"].includes(view); // 로그인 후 화면
+    const inside = ["list", "form", "content", "messages"].includes(view); // 로그인 후 화면
     $("#logout").hidden = !inside;
     $("#tabs").hidden = !inside;
     window.scrollTo(0, 0);
@@ -49,7 +49,7 @@
     if (event === "PASSWORD_RECOVERY") { recovering = true; msg(""); show("reset"); return; }
     if (recovering) return;
     if (session) {
-      if (!["list", "form", "content"].includes(current)) openTab("events");
+      if (!["list", "form", "content", "messages"].includes(current)) openTab("events");
     } else {
       show("login");
     }
@@ -95,7 +95,7 @@
   /* ---------------------------------------------------- list */
   /* ---------------------------------------------------- tabs */
   const editor = window.createContentEditor(sb, { msg, errText });
-  const TABS = [{ key: "events", label: "공연 일정" }, ...editor.sections.map((s) => ({ key: s.key, label: s.label }))];
+  const TABS = [{ key: "events", label: "공연 일정" }, { key: "messages", label: "문의" }, ...editor.sections.map((s) => ({ key: s.key, label: s.label }))];
   $("#tabs").innerHTML = TABS.map((t) => `<button type="button" data-tab="${t.key}">${esc(t.label)}</button>`).join("");
   let tab = "events";
   function openTab(key) {
@@ -103,12 +103,53 @@
     msg("");
     $$("#tabs button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tab === key)));
     if (key === "events") return loadList();
+    if (key === "messages") return loadMessages();
     show("content");
     editor.open(key);
   }
   $("#tabs").addEventListener("click", (e) => {
     const b = e.target.closest("[data-tab]");
     if (b) openTab(b.dataset.tab);
+  });
+
+  /* ---------------------------------------------------- 문의 */
+  async function loadMessages() {
+    show("messages");
+    const { data, error } = await sb.from("messages").select("*").order("created_at", { ascending: false });
+    if (error) {
+      if (/messages/.test(error.message) && /schema cache|does not exist/i.test(error.message)) {
+        return msg("문의 저장용 테이블이 아직 없습니다. Supabase 에서 supabase/schema-messages.sql 을 실행해 주세요.", true);
+      }
+      return msg(errText(error), true);
+    }
+    const fmt = new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium", timeStyle: "short" });
+    $("#messages").innerHTML = data.length
+      ? data.map((m) => {
+          const reply = `mailto:${encodeURIComponent(m.email)}?subject=${encodeURIComponent("Re: " + (m.subject || "Seoyoung Choi"))}`;
+          return `
+          <li>
+            <div class="m-head">
+              <div><b>${esc(m.name)}</b> <a href="mailto:${esc(m.email)}">${esc(m.email)}</a></div>
+              <small>${esc(fmt.format(new Date(m.created_at)))}${m.lang ? " · " + esc(m.lang.toUpperCase()) : ""}</small>
+            </div>
+            ${m.subject ? `<div class="m-subject">${esc(m.subject)}</div>` : ""}
+            <p class="m-body">${esc(m.message)}</p>
+            <div class="m-btns">
+              <a class="btn" href="${esc(reply)}">답장하기 →</a>
+              <button type="button" class="admin-textbtn" data-del-msg="${esc(m.id)}">삭제</button>
+            </div>
+          </li>`;
+        }).join("")
+      : '<li class="a-empty">아직 들어온 문의가 없습니다.</li>';
+  }
+
+  $("#messages").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-del-msg]");
+    if (!b || !confirm("이 문의를 삭제할까요? 삭제하면 되돌릴 수 없습니다.")) return;
+    const { error } = await sb.from("messages").delete().eq("id", b.dataset.delMsg);
+    if (error) return msg(errText(error), true);
+    msg("삭제했습니다.");
+    loadMessages();
   });
 
   async function loadList() {

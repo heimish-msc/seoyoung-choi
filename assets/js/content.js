@@ -22,18 +22,12 @@
     return /^[\w-]{11}$/.test(s) ? s : "";
   }
 
-  const venueCaption = (v, l) => (v ? (l === "ko" ? `${v.ko} — ${v.city.ko}` : `${v.orig} — ${v.city[l]}`) : "");
-
   /* ---------------------------------------------------- 사진 자리 */
   const PHOTO_KEYS = [
-    { k: "hero1", label: "홈 상단 — 왼쪽", file: "assets/images/hero-1.jpg" },
-    { k: "hero2", label: "홈 상단 — 가운데 (가로 사진)", file: "assets/images/hero-2.jpg" },
-    { k: "hero3", label: "홈 상단 — 오른쪽", file: "assets/images/hero-3.jpg" },
-    { k: "recentMain", label: "홈 '최근 연주' — 큰 사진", file: "assets/images/recent-main.jpg" },
-    { k: "venue1", label: "홈 '최근 연주' — 작은 사진 1", file: "assets/images/venue-1.jpg", venue: 0 },
-    { k: "venue2", label: "홈 '최근 연주' — 작은 사진 2", file: "assets/images/venue-2.jpg", venue: 1 },
-    { k: "venue3", label: "홈 '최근 연주' — 작은 사진 3", file: "assets/images/venue-3.jpg", venue: 9 },
-    { k: "aboutPortrait", label: "소개 페이지 — 프로필 사진", file: "assets/images/about-portrait.jpg" }
+    { k: "hero1", label: "첫 화면 상단 — 왼쪽", file: "assets/images/hero-1.jpg" },
+    { k: "hero2", label: "첫 화면 상단 — 가운데 (가로 사진)", file: "assets/images/hero-2.jpg" },
+    { k: "hero3", label: "첫 화면 상단 — 오른쪽", file: "assets/images/hero-3.jpg" },
+    { k: "aboutPortrait", label: "첫 화면 약력 옆 — 프로필 사진", file: "assets/images/about-portrait.jpg" }
   ];
 
   /* ---------------------------------------------------- 편집 화면 정의 */
@@ -48,7 +42,7 @@
   const SECTIONS = [
     {
       key: "videos", label: "영상",
-      help: "유튜브 주소를 붙여넣으면 썸네일이 자동으로 표시됩니다. 위·아래 버튼으로 순서를 바꿀 수 있어요. 홈과 영상 페이지에 함께 반영됩니다.",
+      help: "유튜브 주소를 붙여넣으면 썸네일이 자동으로 표시됩니다. 위·아래 버튼으로 순서를 바꿀 수 있어요.",
       fields: [{ k: "items", label: "영상 목록", type: "list", item: [
         { k: "youtube", label: "유튜브 주소 또는 영상 ID" },
         { k: "title", label: "제목", ml: true },
@@ -56,20 +50,19 @@
       ] }]
     },
     {
-      key: "home", label: "홈 문구",
+      key: "home", label: "첫 화면 문구",
       fields: [
-        { k: "role", label: "이름 아래 한 줄 소개 (푸터에도 표시)", ml: true },
-        { k: "recentText", label: "'최근 연주' 소개 글", ml: true, area: true }
+        { k: "role", label: "이름 아래 한 줄 소개 (푸터에도 표시)", ml: true }
       ]
     },
     {
       key: "bio", label: "소개 글",
-      help: "소개 페이지의 약력입니다. 문단 사이는 빈 줄로 구분해 주세요.",
+      help: "첫 화면(About)의 약력입니다. 문단 사이는 빈 줄로 구분해 주세요.",
       fields: [{ k: "text", label: "약력", ml: true, area: true, rows: 16, stack: true }]
     },
     {
       key: "lists", label: "학력·경력",
-      help: "소개 페이지의 목록들입니다. 언어 칸을 비워 두면 영어 → 한국어 순으로 대신 표시됩니다.",
+      help: "첫 화면(About)의 목록들입니다. 언어 칸을 비워 두면 영어 → 한국어 순으로 대신 표시됩니다.",
       fields: [
         { k: "education", label: "학력", type: "list", item: eduItem },
         { k: "extra", label: "추가 수학", type: "list", item: eduItem },
@@ -83,7 +76,7 @@
     },
     {
       key: "contact", label: "연락처·SNS",
-      help: "홈 상단 연락처와 모든 페이지 하단의 SNS 아이콘에 반영됩니다.",
+      help: "첫 화면 상단 연락처, Contact 페이지, 모든 페이지 하단의 SNS 아이콘에 반영됩니다. 전화번호를 비워 두면 표시되지 않습니다.",
       fields: [
         { k: "email", label: "이메일" },
         { k: "TEL", label: "전화번호" },
@@ -110,8 +103,7 @@
   const DEFAULTS = {
     videos: { items: VIDEOS.map((v) => ({ youtube: v.youtube, title: clone(v.title), sub: clone(v.sub) })) },
     home: {
-      role: ml((l) => I[l].home.role),
-      recentText: ml((l) => I[l].home.recentText)
+      role: ml((l) => I[l].home.role)
     },
     bio: { text: ml((l) => (I[l].about.bio || []).join("\n\n")) },
     lists: {
@@ -125,9 +117,7 @@
       teachers_germany: clone(TEACHERS.germany)
     },
     contact: { email: SITE.email, TEL: SITE.TEL, instagram: SITE.instagram, youtube: SITE.youtube },
-    photos: Object.fromEntries(PHOTO_KEYS.map((p) => [p.k, p.venue == null
-      ? { url: p.file }
-      : { url: p.file, caption: ml((l) => venueCaption(VENUES[p.venue], l)) }]))
+    photos: Object.fromEntries(PHOTO_KEYS.map((p) => [p.k, { url: p.file }]))
   };
   Object.freeze(DEFAULTS);
 
@@ -143,7 +133,6 @@
 
     if (d.home) LANGS.forEach((l) => {
       setText(I[l].home, "role", d.home.role, l);
-      setText(I[l].home, "recentText", d.home.recentText, l);
     });
 
     if (d.bio && d.bio.text) LANGS.forEach((l) => {

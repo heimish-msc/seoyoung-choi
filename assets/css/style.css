@@ -400,6 +400,13 @@ html[lang="ko"] .bio { line-height: 1.8; }
 }
 .btn:hover { background: #000; }
 .form__note { color: var(--muted); font-size: 12px; }
+.form__status { padding: 12px 14px; border: var(--line); font-size: 14px; font-weight: 500; }
+.form__status.is-error { background: var(--ink); color: var(--bg); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.contact--noimg { grid-template-columns: 1fr 1.2fr; }
+.contact--noimg .contact__intro { margin-top: 0; }
+.contact__form { margin-top: 0; }
+.info-row[hidden] { display: none; }
 @container (max-width: 720px) {
   .contact { grid-template-columns: 1fr; }
   .contact > .media { aspect-ratio: 16 / 11; min-height: 0; }

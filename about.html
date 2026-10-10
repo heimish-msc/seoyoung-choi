@@ -1,82 +1,15 @@
 <!doctype html>
-<html lang="en" class="js-loading">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About — Seoyoung Choi</title>
-  <meta name="description" content="Organist Seoyoung Choi (최서영) — Korea · Europe · USA">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/supabase-config.js" defer></script>
-  <script src="assets/js/data.js" defer></script>
-  <script src="assets/js/i18n.js" defer></script>
-  <script src="assets/js/content.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
+  <!-- About 은 첫 화면(index.html)으로 합쳐졌습니다. 예전 주소로 들어오면 첫 화면으로 이동 -->
+  <meta http-equiv="refresh" content="0; url=index.html">
+  <link rel="canonical" href="index.html">
+  <script>location.replace("index.html" + location.search);</script>
 </head>
-<body data-page="about">
-<header class="site-header" id="site-header"></header>
-<main id="main" class="wrap">
-
-  <!-- PROFILE -->
-  <section class="card" aria-labelledby="profile-title">
-    <div class="profile">
-      <div class="media" data-photo="aboutPortrait" style="--img:url('assets/images/about-portrait.jpg')"></div>
-      <div>
-        <div class="profile__meta label">
-          <span data-i18n="common.nameLatin"></span>
-        </div>
-        <div class="bio" id="bio"></div>
-      </div>
-    </div>
-    <div class="profile__title">
-      <h1 class="display" id="profile-title" data-i18n="about.title"></h1>
-    </div>
-  </section>
-
-  <!-- EDUCATION -->
-  <section class="card" aria-labelledby="edu-title">
-    <div class="card__head">
-      <h2 class="display display--md" id="edu-title" data-i18n="about.eduTitle"></h2>
-    </div>
-    <ul class="rows" id="education"></ul>
-    <h3 class="label subhead" data-i18n="about.extraTitle"></h3>
-    <ul class="rows" id="extra"></ul>
-  </section>
-
-  <!-- PRIZES / ORCHESTRA -->
-  <section class="card">
-    <div class="split">
-      <div>
-        <h2 class="display display--sm" data-i18n="about.awardsTitle"></h2>
-        <ul class="ulist" id="awards"></ul>
-      </div>
-      <div>
-        <h2 class="display display--sm" data-i18n="about.orchTitle"></h2>
-        <ul class="ulist" id="orchestras"></ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- VENUES -->
-  <section class="card" aria-labelledby="venues-title">
-    <div class="card__head">
-      <h2 class="display display--md" id="venues-title" data-i18n="about.venuesTitle"></h2>
-    </div>
-    <ul class="venues" id="venues"></ul>
-  </section>
-
-  <!-- TEACHERS -->
-  <section class="card" aria-labelledby="teachers-title">
-    <div class="card__head">
-      <h2 class="display display--md" id="teachers-title" data-i18n="about.teachersTitle"></h2>
-    </div>
-    <div class="teachers" id="teachers"></div>
-  </section>
-
-</main>
-<footer class="site-footer" id="site-footer"></footer>
+<body>
+  <p><a href="index.html">Seoyoung Choi — About</a></p>
 </body>
 </html>

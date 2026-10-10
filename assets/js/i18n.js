@@ -105,8 +105,11 @@ window.I18N = {
       fEmail: "이메일",
       fSubject: "제목",
       fMessage: "메시지",
-      send: "이메일로 보내기",
-      note: "버튼을 누르면 사용 중인 메일 앱이 열립니다."
+      send: "보내기",
+      note: "남겨 주신 이메일로 답장드리겠습니다.",
+      sending: "보내는 중…",
+      sent: "문의가 전송되었습니다. 감사합니다.",
+      failed: "전송하지 못했습니다. 잠시 후 다시 시도하시거나 이메일로 연락해 주세요."
     }
   },
 
@@ -215,8 +218,11 @@ window.I18N = {
       fEmail: "Email",
       fSubject: "Subject",
       fMessage: "Message",
-      send: "Send via email",
-      note: "This opens your email app with the message ready to send."
+      send: "Send",
+      note: "A reply will be sent to the email address you provide.",
+      sending: "Sending…",
+      sent: "Thank you — your message has been sent.",
+      failed: "Your message could not be sent. Please try again later or write by email."
     }
   },
 
@@ -326,8 +332,11 @@ window.I18N = {
       fEmail: "E-mail",
       fSubject: "Objet",
       fMessage: "Message",
-      send: "Envoyer par e-mail",
-      note: "Votre application de messagerie s’ouvrira avec le message prêt à envoyer."
+      send: "Envoyer",
+      note: "Une réponse vous sera envoyée à l’adresse e-mail indiquée.",
+      sending: "Envoi en cours…",
+      sent: "Merci, votre message a bien été envoyé.",
+      failed: "Le message n’a pas pu être envoyé. Veuillez réessayer plus tard ou écrire par e-mail."
     }
   }
 };
