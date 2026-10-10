@@ -82,6 +82,7 @@
         <div class="footer__end">
           <div class="socials">${socialsHTML()}</div>
           <div class="label">© ${new Date().getFullYear()} Seoyoung Choi. <span data-i18n="common.rights"></span></div>
+          <a class="footer__admin" href="admin/" aria-label="Admin" title="Admin">${ICON.gear}</a>
         </div>
       </div>`;
 
