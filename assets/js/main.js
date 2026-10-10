@@ -105,9 +105,14 @@
       }
     });
     $$("[data-socials]").forEach((el) => (el.innerHTML = socialsHTML()));
-    $$("[data-venue]").forEach((el) => {
-      const v = VENUES[+el.dataset.venue];
-      if (v) el.textContent = `${nameOf(v)} — ${L(v.city)}`;
+    // 관리자 페이지에서 바꿀 수 있는 사진과 사진 설명
+    $$("[data-photo]").forEach((el) => {
+      const p = window.PHOTOS && PHOTOS[el.dataset.photo];
+      if (p && p.url) el.style.setProperty("--img", `url("${p.url}")`);
+    });
+    $$("[data-caption]").forEach((el) => {
+      const p = window.PHOTOS && PHOTOS[el.dataset.caption];
+      el.textContent = p ? L(p.caption) : "";
     });
   }
 
@@ -300,8 +305,8 @@
       .forEach((el) => { el.classList.add("reveal"); io.observe(el); });
   }
 
-  /* ---------------------------------------------------- events data */
-  // 공연 일정은 관리자 페이지(/admin)에서 입력하는 Supabase events 테이블에서 불러온다
+  /* ---------------------------------------------------- 관리자 페이지에서 저장한 내용 */
+  // 공연 일정: Supabase events 테이블 / 그 외 콘텐츠: site_content 테이블 (없으면 기본 내용 사용)
   window.EVENTS = null; // null = 아직 불러오는 중
   const toEvent = (r) => ({
     date: r.event_date,
@@ -312,21 +317,34 @@
     venue: { ko: r.venue_ko, en: r.venue_en, fr: r.venue_fr },
     city: { ko: r.city_ko, en: r.city_en, fr: r.city_fr }
   });
-  function loadEvents() {
-    if (page !== "home" && page !== "events") return;
-    const done = (list) => { window.EVENTS = list; if (render[page]) render[page](); };
-    if (!window.SUPABASE) return done([]);
-    fetch(`${SUPABASE.url}/rest/v1/events?select=*&order=event_date.asc`, {
-      headers: { apikey: SUPABASE.anonKey, Authorization: `Bearer ${SUPABASE.anonKey}` }
-    })
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((rows) => done(rows.map(toEvent)))
-      .catch(() => done([])); // 불러오기 실패 시 '곧 공개' 문구 표시
+  const api = (path) => fetch(`${SUPABASE.url}/rest/v1/${path}`, {
+    headers: { apikey: SUPABASE.anonKey, Authorization: `Bearer ${SUPABASE.anonKey}` }
+  }).then((r) => (r.ok ? r.json() : Promise.reject(r.status)));
+
+  function loadRemote() {
+    if (!window.SUPABASE) return Promise.resolve();
+    const needEvents = page === "home" || page === "events";
+    return Promise.all([
+      api("site_content?select=key,value")
+        .then((rows) => CONTENT.apply(Object.fromEntries(rows.map((r) => [r.key, r.value]))))
+        .catch(() => { /* 실패하면 기본 내용 그대로 */ }),
+      needEvents
+        ? api("events?select=*&order=event_date.asc").then((rows) => rows.map(toEvent)).catch(() => [])
+        : Promise.resolve([])
+    ]).then(([, events]) => { window.EVENTS = events; });
   }
+
+  const reveal = () => document.documentElement.classList.remove("js-loading");
 
   renderChrome();
   setLang(lang);
-  loadEvents();
   initReveal();
-  document.documentElement.classList.remove("js-loading");
+  // 저장된 내용을 받아 다시 그린 뒤 표시 (느리면 1.5초 후 기본 내용으로 먼저 표시)
+  const fallback = setTimeout(reveal, 1500);
+  loadRemote().finally(() => {
+    if (window.EVENTS === null) window.EVENTS = [];
+    setLang(lang);
+    clearTimeout(fallback);
+    reveal();
+  });
 })();

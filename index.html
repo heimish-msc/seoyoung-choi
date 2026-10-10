@@ -13,6 +13,7 @@
   <script src="assets/js/supabase-config.js" defer></script>
   <script src="assets/js/data.js" defer></script>
   <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/content.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </head>
 <body data-page="home">
@@ -22,9 +23,9 @@
   <!-- PROFILE / HERO -->
   <section class="card hero" aria-labelledby="hero-title">
     <div class="hero__photos">
-      <div class="media" style="--img:url('assets/images/hero-1.jpg')" role="img" aria-label=""></div>
-      <div class="media" style="--img:url('assets/images/hero-2.jpg')" role="img" aria-label=""></div>
-      <div class="media" style="--img:url('assets/images/hero-3.jpg')" role="img" aria-label=""></div>
+      <div class="media" data-photo="hero1" style="--img:url('assets/images/hero-1.jpg')" role="img" aria-label=""></div>
+      <div class="media" data-photo="hero2" style="--img:url('assets/images/hero-2.jpg')" role="img" aria-label=""></div>
+      <div class="media" data-photo="hero3" style="--img:url('assets/images/hero-3.jpg')" role="img" aria-label=""></div>
     </div>
     <div class="hero__meta">
       <div class="hero__contact">
@@ -42,23 +43,23 @@
   <!-- RECENT PERFORMANCES -->
   <section class="card" aria-labelledby="recent-title">
     <div class="recent">
-      <div class="media recent__img" style="--img:url('assets/images/recent-main.jpg')"></div>
+      <div class="media recent__img" data-photo="recentMain" style="--img:url('assets/images/recent-main.jpg')"></div>
       <div class="recent__text">
         <p data-i18n="home.recentText"></p>
         <a class="link-arrow" href="about.html"><span data-i18n="home.recentLink"></span> →</a>
       </div>
       <div class="side-list">
         <a href="events.html" class="side-item">
-          <span class="media" style="--img:url('assets/images/venue-1.jpg')"></span>
-          <span class="caption" data-venue="0"></span>
+          <span class="media" data-photo="venue1" style="--img:url('assets/images/venue-1.jpg')"></span>
+          <span class="caption" data-caption="venue1"></span>
         </a>
         <a href="events.html" class="side-item">
-          <span class="media" style="--img:url('assets/images/venue-2.jpg'); --pos: 50% 30%"></span>
-          <span class="caption" data-venue="1"></span>
+          <span class="media" data-photo="venue2" style="--img:url('assets/images/venue-2.jpg'); --pos: 50% 30%"></span>
+          <span class="caption" data-caption="venue2"></span>
         </a>
         <a href="events.html" class="side-item">
-          <span class="media" style="--img:url('assets/images/venue-3.jpg'); --pos: 50% 32%"></span>
-          <span class="caption" data-venue="9"></span>
+          <span class="media" data-photo="venue3" style="--img:url('assets/images/venue-3.jpg'); --pos: 50% 32%"></span>
+          <span class="caption" data-caption="venue3"></span>
         </a>
       </div>
       <h2 class="display display--lg recent__title" id="recent-title" data-i18n="home.recentTitle"></h2>

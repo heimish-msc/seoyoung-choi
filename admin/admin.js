@@ -23,7 +23,9 @@
   function show(view) {
     current = view;
     $$(".admin-view").forEach((el) => (el.hidden = el.id !== "view-" + view));
-    $("#logout").hidden = !(view === "list" || view === "form");
+    const inside = ["list", "form", "content"].includes(view); // 로그인 후 화면
+    $("#logout").hidden = !inside;
+    $("#tabs").hidden = !inside;
     window.scrollTo(0, 0);
   }
   function msg(text, isError) {
@@ -35,7 +37,9 @@
   const errText = (e) => {
     const m = (e && e.message) || "";
     if (/Invalid login/i.test(m)) return "이메일 또는 비밀번호가 올바르지 않습니다.";
-    if (/row-level security|permission/i.test(m)) return "이 계정에는 수정 권한이 없습니다. 관리자 이메일로 등록되어 있는지 확인해 주세요.";
+    if (/site_content/.test(m) && /schema cache|does not exist/i.test(m)) return "콘텐츠 저장용 테이블이 아직 없습니다. Supabase 에서 supabase/schema-content.sql 을 실행해 주세요.";
+    if (/Bucket not found/i.test(m)) return "사진 저장소가 아직 없습니다. Supabase 에서 supabase/schema-content.sql 을 실행해 주세요.";
+    if (/row-level security|permission|Unauthorized/i.test(m)) return "이 계정에는 수정 권한이 없습니다. 관리자 이메일로 등록되어 있는지 확인해 주세요.";
     if (/Password should be/i.test(m)) return "비밀번호가 너무 짧거나 단순합니다.";
     return "오류가 발생했습니다. 잠시 후 다시 시도해 주세요." + (m ? ` (${m})` : "");
   };
@@ -45,7 +49,7 @@
     if (event === "PASSWORD_RECOVERY") { recovering = true; msg(""); show("reset"); return; }
     if (recovering) return;
     if (session) {
-      if (current !== "list" && current !== "form") loadList();
+      if (!["list", "form", "content"].includes(current)) openTab("events");
     } else {
       show("login");
     }
@@ -77,8 +81,8 @@
     recovering = false;
     e.target.reset();
     history.replaceState(null, "", location.pathname); // 주소의 재설정 토큰 제거
+    openTab("events");
     msg("비밀번호를 변경했습니다.");
-    loadList();
   });
 
   $("#logout").addEventListener("click", async () => {
@@ -89,6 +93,24 @@
   $$("[data-go]").forEach((b) => b.addEventListener("click", () => { msg(""); show(b.dataset.go); }));
 
   /* ---------------------------------------------------- list */
+  /* ---------------------------------------------------- tabs */
+  const editor = window.createContentEditor(sb, { msg, errText });
+  const TABS = [{ key: "events", label: "공연 일정" }, ...editor.sections.map((s) => ({ key: s.key, label: s.label }))];
+  $("#tabs").innerHTML = TABS.map((t) => `<button type="button" data-tab="${t.key}">${esc(t.label)}</button>`).join("");
+  let tab = "events";
+  function openTab(key) {
+    tab = key;
+    msg("");
+    $$("#tabs button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tab === key)));
+    if (key === "events") return loadList();
+    show("content");
+    editor.open(key);
+  }
+  $("#tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tab]");
+    if (b) openTab(b.dataset.tab);
+  });
+
   async function loadList() {
     show("list");
     const { data, error } = await sb.from("events").select("*").order("event_date", { ascending: false });
