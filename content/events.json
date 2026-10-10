@@ -1,0 +1,79 @@
+{
+  "events": [
+    {
+      "date": "2026-11-21",
+      "time": "19:30",
+      "link": "",
+      "title": {
+        "ko": "오르간 독주회",
+        "en": "Organ Recital",
+        "fr": "Récital d'orgue"
+      },
+      "program": {
+        "ko": "프로그램 추후 공개",
+        "en": "Programme to be announced",
+        "fr": "Programme à venir"
+      },
+      "venue": {
+        "ko": "공연장 추후 공개",
+        "en": "Venue TBA",
+        "fr": "Lieu à confirmer"
+      },
+      "city": {
+        "ko": "서울",
+        "en": "Seoul",
+        "fr": "Séoul"
+      }
+    },
+    {
+      "date": "2026-12-19",
+      "time": "20:00",
+      "link": "",
+      "title": {
+        "ko": "크리스마스 오르간 콘서트",
+        "en": "Christmas Organ Concert",
+        "fr": "Concert d'orgue de Noël"
+      },
+      "program": {
+        "ko": "프로그램 추후 공개",
+        "en": "Programme to be announced",
+        "fr": "Programme à venir"
+      },
+      "venue": {
+        "ko": "공연장 추후 공개",
+        "en": "Venue TBA",
+        "fr": "Lieu à confirmer"
+      },
+      "city": {
+        "ko": "파리",
+        "en": "Paris",
+        "fr": "Paris"
+      }
+    },
+    {
+      "date": "2027-03-06",
+      "time": "19:30",
+      "link": "",
+      "title": {
+        "ko": "현대 오르간 음악 — 국내 초연",
+        "en": "Contemporary Organ — Korean Premieres",
+        "fr": "Orgue contemporain — créations en Corée"
+      },
+      "program": {
+        "ko": "프로그램 추후 공개",
+        "en": "Programme to be announced",
+        "fr": "Programme à venir"
+      },
+      "venue": {
+        "ko": "공연장 추후 공개",
+        "en": "Venue TBA",
+        "fr": "Lieu à confirmer"
+      },
+      "city": {
+        "ko": "서울",
+        "en": "Seoul",
+        "fr": "Séoul"
+      }
+    }
+  ]
+}

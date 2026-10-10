@@ -24,7 +24,8 @@
 
   const dig = (obj, path) => path.split(".").reduce((o, k) => (o == null ? undefined : o[k]), obj);
   const t = (key) => { const v = dig(I18N[lang], key); return v == null ? (dig(I18N.en, key) ?? key) : v; };
-  const L = (o) => (o == null ? "" : typeof o === "string" ? o : (o[lang] ?? o.en ?? ""));
+  // 비어 있는 언어는 영어 → 한국어 순으로 대신 표시
+  const L = (o) => (o == null ? "" : typeof o === "string" ? o : (o[lang] || o.en || o.ko || ""));
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -126,22 +127,28 @@
   function splitEvents() {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const parse = (e) => new Date(e.date + "T00:00:00");
-    const sorted = [...EVENTS].sort((a, b) => parse(a) - parse(b));
+    const sorted = [...(window.EVENTS || [])].sort((a, b) => parse(a) - parse(b));
     return {
       upcoming: sorted.filter((e) => parse(e) >= today),
       past: sorted.filter((e) => parse(e) < today).reverse()
     };
   }
 
+  // 큰 날짜 표기 — 한국어: 월.일 (11.21) / 영어: Nov 21 / 프랑스어: 21 Nov.
+  function formatDay(d) {
+    if (lang === "ko") return `${d.getMonth() + 1}.${d.getDate()}`;
+    if (lang === "en") return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(d);
+    const fr = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short" }).format(d);
+    return fr.replace(/\p{L}/u, (c) => c.toUpperCase()); // 21 nov. → 21 Nov.
+  }
+
   function eventRow(e) {
     const d = new Date(e.date + "T00:00:00");
     const loc = LOCALES[lang];
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
     const meta = `${d.getFullYear()} · ${new Intl.DateTimeFormat(loc, { weekday: "short" }).format(d)}${e.time ? " · " + e.time : ""}`;
     return `
       <li class="event">
-        <div class="event__date"><b>${day}.${month}</b><small>${esc(meta)}</small></div>
+        <div class="event__date"><b>${esc(formatDay(d))}</b><small>${esc(meta)}</small></div>
         <div>
           <div class="event__title">${esc(L(e.title))}</div>
           <div class="event__prog">${esc(L(e.program))}</div>
@@ -152,6 +159,7 @@
   }
 
   function eventList(el, list) {
+    if (window.EVENTS === null) { el.innerHTML = ""; return; } // 불러오는 중
     el.innerHTML = list.length
       ? list.map(eventRow).join("")
       : `<li class="event event--empty">${esc(t("events.none"))}</li>`;
@@ -227,7 +235,7 @@
       eventList($("#upcoming"), upcoming);
       $("#past-wrap").hidden = past.length === 0;
       if (past.length) eventList($("#past"), past);
-      venueGrid($("#venues"));
+      if ($("#venues")) venueGrid($("#venues"));
     },
 
     contact() {
@@ -289,8 +297,26 @@
       .forEach((el) => { el.classList.add("reveal"); io.observe(el); });
   }
 
+  /* ---------------------------------------------------- events data */
+  // 공연 일정은 관리자 페이지에서 수정하는 content/events.json 에서 불러온다
+  window.EVENTS = null; // null = 아직 불러오는 중
+  function loadEvents() {
+    if (page !== "home" && page !== "events") return;
+    fetch("content/events.json", { cache: "no-cache" })
+      .then((r) => r.json())
+      .then((d) => {
+        window.EVENTS = (d.events || []).filter((e) => e && e.date);
+        if (render[page]) render[page]();
+      })
+      .catch(() => {
+        window.EVENTS = []; // 불러오기 실패 시 '곧 공개' 문구 표시
+        if (render[page]) render[page]();
+      });
+  }
+
   renderChrome();
   setLang(lang);
+  loadEvents();
   initReveal();
   document.documentElement.classList.remove("js-loading");
 })();

@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>최서영</title>
   <meta name="description" content="Organist Seoyoung Choi (최서영) — Korea · Europe · USA">
+  <!-- 관리자 초대·비밀번호 재설정 메일 링크는 홈으로 오므로 관리자 페이지로 넘김 -->
+  <script>
+    if (/(invite|recovery|confirmation|email_change)_token=/.test(location.hash)) location.replace("admin/" + location.hash);
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap">
@@ -52,11 +56,11 @@
           <span class="caption" data-venue="0"></span>
         </a>
         <a href="events.html" class="side-item">
-          <span class="media" style="--img:url('assets/images/venue-2.jpg')"></span>
+          <span class="media" style="--img:url('assets/images/venue-2.jpg'); --pos: 50% 30%"></span>
           <span class="caption" data-venue="1"></span>
         </a>
         <a href="events.html" class="side-item">
-          <span class="media" style="--img:url('assets/images/venue-3.jpg')"></span>
+          <span class="media" style="--img:url('assets/images/venue-3.jpg'); --pos: 50% 32%"></span>
           <span class="caption" data-venue="9"></span>
         </a>
       </div>

@@ -156,7 +156,7 @@ main > .card:first-child { margin-top: clamp(20px, 3vw, 36px); }
   display: block;
   overflow: hidden;
   background:
-    var(--img, none) center / cover no-repeat,
+    var(--img, none) var(--pos, center) / cover no-repeat,
     radial-gradient(130% 100% at 30% 15%, #b9b8b3 0%, #8e8d89 55%, #6f6e6a 100%);
 }
 .media__overlay {
@@ -292,7 +292,7 @@ a.vitem:hover .media::before { background: rgba(0, 0, 0, .18); }
   gap: 8px clamp(12px, 2cqi, 28px); padding: 18px 0 20px;
   border-bottom: var(--line); align-items: start;
 }
-.event__date b { display: block; font-size: clamp(30px, 4.2cqi, 58px); font-weight: 700; letter-spacing: -.05em; line-height: .88; }
+.event__date b { display: block; white-space: nowrap; font-size: clamp(28px, 3.8cqi, 50px); font-weight: 700; letter-spacing: -.05em; line-height: .88; }
 .event__date small { display: block; margin-top: 6px; font-size: 11px; font-weight: 500; text-transform: uppercase; }
 .event__title { font-weight: 700; font-size: clamp(17px, 2cqi, 26px); line-height: 1.1; letter-spacing: -.02em; text-transform: uppercase; }
 .event__prog { margin-top: 6px; font-size: 13px; color: var(--muted); }

@@ -1,0 +1,67 @@
+# Decap CMS 설정 — 관리자 페이지(/admin)에서 공연 일정을 편집합니다.
+# 저장하면 GitHub 저장소의 content/events.json 이 수정되고, Netlify가 사이트를 자동으로 다시 배포합니다.
+
+backend:
+  name: git-gateway
+  branch: main
+
+locale: ko
+site_url: /
+display_url: /
+media_folder: assets/images/uploads
+public_folder: /assets/images/uploads
+
+collections:
+  - name: settings
+    label: 공연 일정
+    files:
+      - name: events
+        label: 공연 일정 (Events)
+        file: content/events.json
+        format: json
+        description: >-
+          여기서 추가·수정한 공연은 홈의 '예정된 공연'과 공연 페이지에 함께 표시됩니다.
+          날짜가 지난 공연은 자동으로 '지난 공연'으로 옮겨집니다.
+          영어·프랑스어 칸을 비워 두면 영어 → 한국어 순으로 대신 표시됩니다.
+        fields:
+          - name: events
+            label: 공연 목록
+            label_singular: 공연
+            widget: list
+            summary: "{{fields.date}} — {{fields.title.ko}}"
+            fields:
+              - { name: date, label: 날짜, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+              - { name: time, label: "시간 (예: 19:30)", widget: string, required: false }
+              - name: title
+                label: 공연 제목
+                widget: object
+                collapsed: false
+                fields:
+                  - { name: ko, label: 한국어, widget: string }
+                  - { name: en, label: English, widget: string, required: false }
+                  - { name: fr, label: Français, widget: string, required: false }
+              - name: program
+                label: 프로그램 / 설명
+                widget: object
+                collapsed: false
+                fields:
+                  - { name: ko, label: 한국어, widget: string, required: false }
+                  - { name: en, label: English, widget: string, required: false }
+                  - { name: fr, label: Français, widget: string, required: false }
+              - name: venue
+                label: 공연장
+                widget: object
+                collapsed: false
+                fields:
+                  - { name: ko, label: 한국어, widget: string, required: false }
+                  - { name: en, label: English, widget: string, required: false }
+                  - { name: fr, label: Français, widget: string, required: false }
+              - name: city
+                label: 도시
+                widget: object
+                collapsed: false
+                fields:
+                  - { name: ko, label: 한국어, widget: string, required: false }
+                  - { name: en, label: English, widget: string, required: false }
+                  - { name: fr, label: Français, widget: string, required: false }
+              - { name: link, label: "예매 링크 (선택)", widget: string, required: false }

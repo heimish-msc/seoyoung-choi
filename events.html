@@ -17,7 +17,28 @@
 <body data-page="events">
 <header class="site-header" id="site-header"></header>
 <main id="main" class="wrap">
-  <!-- 내용 준비 중 -->
+
+  <section class="card" aria-labelledby="page-title">
+    <div class="page-head">
+      <div>
+        <h1 class="display" id="page-title" data-i18n="events.title"></h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- 공연 일정은 assets/js/data.js 의 EVENTS 에서 불러오며, 홈 '예정된 공연'과 같은 데이터입니다 -->
+  <section class="card" aria-labelledby="upcoming-title">
+    <div class="card__head">
+      <h2 class="display display--md" id="upcoming-title" data-i18n="events.upcoming"></h2>
+    </div>
+    <ul class="events" id="upcoming"></ul>
+
+    <div id="past-wrap" hidden>
+      <h3 class="label subhead" data-i18n="events.past"></h3>
+      <ul class="events" id="past"></ul>
+    </div>
+  </section>
+
 </main>
 <footer class="site-footer" id="site-footer"></footer>
 </body>

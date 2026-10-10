@@ -29,31 +29,8 @@ window.VIDEOS = [
   }
 ];
 
-/* 공연 일정 — date: "YYYY-MM-DD" (지난 날짜는 자동으로 '지난 공연'으로 이동)
-   ⚠️ 아래는 레이아웃 확인용 샘플입니다. 실제 일정으로 교체하세요. */
-window.EVENTS = [
-  {
-    date: "2026-11-21", time: "19:30", link: "",
-    title: { ko: "오르간 독주회", en: "Organ Recital", fr: "Récital d'orgue" },
-    program: { ko: "프로그램 추후 공개", en: "Programme to be announced", fr: "Programme à venir" },
-    venue: { ko: "공연장 추후 공개", en: "Venue TBA", fr: "Lieu à confirmer" },
-    city: { ko: "서울", en: "Seoul", fr: "Séoul" }
-  },
-  {
-    date: "2026-12-19", time: "20:00", link: "",
-    title: { ko: "크리스마스 오르간 콘서트", en: "Christmas Organ Concert", fr: "Concert d'orgue de Noël" },
-    program: { ko: "프로그램 추후 공개", en: "Programme to be announced", fr: "Programme à venir" },
-    venue: { ko: "공연장 추후 공개", en: "Venue TBA", fr: "Lieu à confirmer" },
-    city: { ko: "파리", en: "Paris", fr: "Paris" }
-  },
-  {
-    date: "2027-03-06", time: "19:30", link: "",
-    title: { ko: "현대 오르간 음악 — 국내 초연", en: "Contemporary Organ — Korean Premieres", fr: "Orgue contemporain — créations en Corée" },
-    program: { ko: "프로그램 추후 공개", en: "Programme to be announced", fr: "Programme à venir" },
-    venue: { ko: "공연장 추후 공개", en: "Venue TBA", fr: "Lieu à confirmer" },
-    city: { ko: "서울", en: "Seoul", fr: "Séoul" }
-  }
-];
+/* 공연 일정은 content/events.json 에 있습니다.
+   관리자 페이지(/admin)에서 입력하면 이 파일이 수정되고, 홈 '예정된 공연'과 공연 페이지에 함께 반영됩니다. */
 
 /* 주요 연주 장소 (이력 기반) */
 window.VENUES = [
