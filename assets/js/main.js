@@ -229,7 +229,7 @@
         ? list.map((g, i) => `
           <figure class="gitem" data-place="${esc(placeKey(g))}">
             <button type="button" class="gitem__btn" data-open="${i}" aria-label="${esc(meta(g) || t("photos.title"))}">
-              <img src="${esc(g.image)}" alt="${esc([L(g.caption), meta(g)].filter(Boolean).join(" — "))}" loading="lazy" decoding="async">
+              <img src="${esc(g.image)}" alt="${esc([L(g.caption), meta(g)].filter(Boolean).join(" — "))}" loading="${i < 6 ? "eager" : "lazy"}" decoding="async">
             </button>
             ${meta(g) || L(g.caption) ? `<figcaption>${meta(g) ? `<span class="gitem__meta">${esc(meta(g))}</span>` : ""}${L(g.caption) ? `<span class="gitem__cap">${esc(L(g.caption))}</span>` : ""}</figcaption>` : ""}
           </figure>`).join("")

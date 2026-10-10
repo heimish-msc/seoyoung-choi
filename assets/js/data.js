@@ -30,18 +30,26 @@ window.VIDEOS = [
 
 /* 사진 아카이브 (Photos 페이지) — 관리자 페이지 '사진 아카이브' 탭에서 추가·수정
    image: 사진 경로 / venue·city: 장소·도시 / date: 날짜(예: 2025.05) / caption: 설명
-   아래는 처음 넣어 둔 사진이며, 장소는 관리자 페이지에서 입력해 주세요. */
+   ⚠️ 장소·도시·날짜·설명은 화면 확인용 예시입니다. 관리자 페이지에서 실제 정보로 바꿔 주세요. */
+const SAMPLE_PLACE = {
+  eustache: { venue: { ko: "생퇴스타슈 성당", en: "Église Saint-Eustache", fr: "Église Saint-Eustache" }, city: { ko: "파리", en: "Paris", fr: "Paris" } },
+  moelln: { venue: { ko: "묄른 성 니콜라이 교회", en: "St. Nicolai-Kirche", fr: "St. Nicolai-Kirche" }, city: { ko: "묄른", en: "Mölln", fr: "Mölln" } },
+  buxtehude: { venue: { ko: "북스테후데 성 베드로 교회", en: "Kirche St. Petri", fr: "Kirche St. Petri" }, city: { ko: "북스테후데", en: "Buxtehude", fr: "Buxtehude" } }
+};
 window.GALLERY = [
-  "assets/images/hero-2.jpg",
-  "assets/images/recent-main.jpg",
-  "assets/images/venue-2.jpg",
-  "assets/images/hero-3.jpg",
-  "assets/images/venue-1.jpg",
-  "assets/images/hero-1.jpg"
-].map((image) => ({
-  image, date: "",
-  venue: { ko: "", en: "", fr: "" }, city: { ko: "", en: "", fr: "" }, caption: { ko: "", en: "", fr: "" }
-}));
+  { image: "assets/images/hero-2.jpg", place: "eustache", date: "2025.05",
+    caption: { ko: "오르간 독주회", en: "Organ recital", fr: "Récital d’orgue" } },
+  { image: "assets/images/recent-main.jpg", place: "moelln", date: "2024.09",
+    caption: { ko: "리허설", en: "Rehearsal", fr: "Répétition" } },
+  { image: "assets/images/venue-2.jpg", place: "eustache", date: "2025.05",
+    caption: { ko: "", en: "", fr: "" } },
+  { image: "assets/images/hero-3.jpg", place: "buxtehude", date: "2024.06",
+    caption: { ko: "초청 연주", en: "Guest recital", fr: "Concert sur invitation" } },
+  { image: "assets/images/venue-1.jpg", place: "moelln", date: "2024.09",
+    caption: { ko: "", en: "", fr: "" } },
+  { image: "assets/images/hero-1.jpg", place: "buxtehude", date: "2024.06",
+    caption: { ko: "", en: "", fr: "" } }
+].map(({ place, ...g }) => Object.assign(g, JSON.parse(JSON.stringify(SAMPLE_PLACE[place]))));
 
 /* 공연 일정은 Supabase 데이터베이스에 있습니다.
    관리자 페이지(/admin)에서 입력하면 홈 '예정된 공연'과 공연 페이지에 바로 반영됩니다. */
