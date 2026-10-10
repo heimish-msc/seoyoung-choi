@@ -8,16 +8,18 @@
   const page = document.body.dataset.page;
 
   /* ---------------------------------------------------- helpers */
+  // 고른 언어는 이번 접속(탭) 동안만 기억 — 새로 접속하면 항상 영어로 시작
   const store = {
-    get() { try { return localStorage.getItem("lang"); } catch (e) { return null; } },
-    set(v) { try { localStorage.setItem("lang", v); } catch (e) { /* ignore */ } }
+    get() { try { return sessionStorage.getItem("lang"); } catch (e) { return null; } },
+    set(v) { try { sessionStorage.setItem("lang", v); } catch (e) { /* ignore */ } }
   };
+  try { localStorage.removeItem("lang"); } catch (e) { /* 예전 방식으로 저장된 언어 설정 정리 */ }
   function detectLang() {
     const q = new URLSearchParams(location.search).get("lang");
     if (LANGS.includes(q)) return q;
     const s = store.get();
     if (LANGS.includes(s)) return s;
-    return "en"; // 처음 방문하면 영어로 시작 (이후엔 고른 언어를 기억)
+    return "en"; // 새로 접속하면 영어로 시작
   }
   let lang = detectLang();
 
