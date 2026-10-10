@@ -298,20 +298,27 @@
   }
 
   /* ---------------------------------------------------- events data */
-  // 공연 일정은 관리자 페이지에서 수정하는 content/events.json 에서 불러온다
+  // 공연 일정은 관리자 페이지(/admin)에서 입력하는 Supabase events 테이블에서 불러온다
   window.EVENTS = null; // null = 아직 불러오는 중
+  const toEvent = (r) => ({
+    date: r.event_date,
+    time: r.start_time || "",
+    link: r.link || "",
+    title: { ko: r.title_ko, en: r.title_en, fr: r.title_fr },
+    program: { ko: r.program_ko, en: r.program_en, fr: r.program_fr },
+    venue: { ko: r.venue_ko, en: r.venue_en, fr: r.venue_fr },
+    city: { ko: r.city_ko, en: r.city_en, fr: r.city_fr }
+  });
   function loadEvents() {
     if (page !== "home" && page !== "events") return;
-    fetch("content/events.json", { cache: "no-cache" })
-      .then((r) => r.json())
-      .then((d) => {
-        window.EVENTS = (d.events || []).filter((e) => e && e.date);
-        if (render[page]) render[page]();
-      })
-      .catch(() => {
-        window.EVENTS = []; // 불러오기 실패 시 '곧 공개' 문구 표시
-        if (render[page]) render[page]();
-      });
+    const done = (list) => { window.EVENTS = list; if (render[page]) render[page](); };
+    if (!window.SUPABASE) return done([]);
+    fetch(`${SUPABASE.url}/rest/v1/events?select=*&order=event_date.asc`, {
+      headers: { apikey: SUPABASE.anonKey, Authorization: `Bearer ${SUPABASE.anonKey}` }
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((rows) => done(rows.map(toEvent)))
+      .catch(() => done([])); // 불러오기 실패 시 '곧 공개' 문구 표시
   }
 
   renderChrome();

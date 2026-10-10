@@ -5,11 +5,118 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>관리자 — Seoyoung Choi</title>
-  <!-- Netlify Identity 로그인 -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="admin.js" defer></script>
 </head>
 <body>
-  <!-- Decap CMS: config.yml 설정에 따라 관리 화면을 그립니다 -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<header class="site-header">
+  <div class="wrap header__inner">
+    <a class="brand" href="../index.html"><b>Seoyoung Choi</b></a>
+    <span class="label admin-tag">Admin</span>
+    <button type="button" class="link-arrow admin-logout" id="logout" hidden>로그아웃</button>
+  </div>
+</header>
+
+<main class="wrap admin" id="main">
+
+  <p class="admin-msg" id="msg" role="status" hidden></p>
+
+  <!-- 로그인 -->
+  <section class="admin-view" id="view-login" hidden>
+    <h1 class="display display--md">관리자 로그인</h1>
+    <form class="form admin-narrow" id="form-login">
+      <div class="field full"><label class="label" for="l-email">이메일</label><input id="l-email" name="email" type="email" autocomplete="username" required></div>
+      <div class="field full"><label class="label" for="l-pass">비밀번호</label><input id="l-pass" name="password" type="password" autocomplete="current-password" required></div>
+      <button class="btn" type="submit">로그인 →</button>
+      <button class="admin-textbtn full" type="button" data-go="forgot">비밀번호를 잊으셨나요?</button>
+    </form>
+  </section>
+
+  <!-- 비밀번호 재설정 메일 -->
+  <section class="admin-view" id="view-forgot" hidden>
+    <h1 class="display display--md">비밀번호 재설정</h1>
+    <p class="admin-help">가입한 이메일을 입력하면 비밀번호 재설정 링크를 보내드립니다.</p>
+    <form class="form admin-narrow" id="form-forgot">
+      <div class="field full"><label class="label" for="f-email">이메일</label><input id="f-email" name="email" type="email" autocomplete="username" required></div>
+      <button class="btn" type="submit">재설정 메일 보내기 →</button>
+      <button class="admin-textbtn full" type="button" data-go="login">← 로그인으로 돌아가기</button>
+    </form>
+  </section>
+
+  <!-- 새 비밀번호 (재설정 메일 링크로 들어왔을 때) -->
+  <section class="admin-view" id="view-reset" hidden>
+    <h1 class="display display--md">새 비밀번호</h1>
+    <form class="form admin-narrow" id="form-reset">
+      <div class="field full"><label class="label" for="r-pass">새 비밀번호 (8자 이상)</label><input id="r-pass" name="password" type="password" minlength="8" autocomplete="new-password" required></div>
+      <div class="field full"><label class="label" for="r-pass2">새 비밀번호 확인</label><input id="r-pass2" name="password2" type="password" minlength="8" autocomplete="new-password" required></div>
+      <button class="btn" type="submit">비밀번호 변경 →</button>
+    </form>
+  </section>
+
+  <!-- 공연 목록 -->
+  <section class="admin-view" id="view-list" hidden>
+    <div class="card__head">
+      <h1 class="display display--md">공연 일정</h1>
+      <button type="button" class="btn" id="btn-new">+ 공연 추가</button>
+    </div>
+    <p class="admin-help">여기서 저장한 공연은 홈의 '예정된 공연'과 공연 페이지에 바로 표시됩니다. 날짜가 지난 공연은 자동으로 '지난 공연'으로 옮겨집니다.</p>
+    <ul class="admin-list" id="list"></ul>
+  </section>
+
+  <!-- 공연 추가·수정 -->
+  <section class="admin-view" id="view-form" hidden>
+    <h1 class="display display--md" id="form-title">공연 추가</h1>
+    <form id="form-event" class="admin-event">
+      <input type="hidden" name="id">
+      <div class="form">
+        <div class="field"><label class="label" for="e-date">날짜 *</label><input id="e-date" name="event_date" type="date" required></div>
+        <div class="field"><label class="label" for="e-time">시간</label><input id="e-time" name="start_time" type="time"></div>
+        <div class="field full"><label class="label" for="e-link">예매 링크 (선택)</label><input id="e-link" name="link" type="url" placeholder="https://"></div>
+      </div>
+
+      <p class="admin-help">영어·프랑스어 칸을 비워 두면 영어 → 한국어 순으로 대신 표시됩니다.</p>
+      <div class="admin-langs">
+        <div class="admin-langs__head label"><span></span><span>한국어</span><span>English</span><span>Français</span></div>
+        <div class="admin-langs__row">
+          <span class="label">공연 제목 *</span>
+          <input name="title_ko" aria-label="공연 제목 한국어" required>
+          <input name="title_en" aria-label="Title English">
+          <input name="title_fr" aria-label="Titre français">
+        </div>
+        <div class="admin-langs__row">
+          <span class="label">프로그램 / 설명</span>
+          <input name="program_ko" aria-label="프로그램 한국어">
+          <input name="program_en" aria-label="Programme English">
+          <input name="program_fr" aria-label="Programme français">
+        </div>
+        <div class="admin-langs__row">
+          <span class="label">공연장</span>
+          <input name="venue_ko" aria-label="공연장 한국어">
+          <input name="venue_en" aria-label="Venue English">
+          <input name="venue_fr" aria-label="Lieu français">
+        </div>
+        <div class="admin-langs__row">
+          <span class="label">도시</span>
+          <input name="city_ko" aria-label="도시 한국어">
+          <input name="city_en" aria-label="City English">
+          <input name="city_fr" aria-label="Ville français">
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <button class="btn" type="submit">저장 →</button>
+        <button class="admin-textbtn" type="button" id="btn-cancel">취소</button>
+      </div>
+    </form>
+  </section>
+
+</main>
 </body>
 </html>

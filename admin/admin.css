@@ -1,0 +1,56 @@
+/* 관리자 페이지 전용 스타일 — 기본 스타일은 ../assets/css/style.css 를 사용 */
+
+.admin { padding-top: clamp(28px, 5vw, 56px); container-type: inline-size; }
+.admin-view .display { margin-bottom: 18px; }
+.admin-tag { margin-left: 4px; padding: 3px 7px; border: var(--line); }
+.admin-logout[hidden] { display: none; }
+.admin-logout { margin-left: auto; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
+.admin-narrow { max-width: 420px; grid-template-columns: 1fr; }
+.admin-help { color: var(--muted); font-size: 13.5px; line-height: 1.5; margin: 0 0 18px; max-width: 60ch; }
+.admin-textbtn {
+  justify-self: start; background: none; border: 0; padding: 4px 0; cursor: pointer;
+  font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px;
+}
+.admin-textbtn:hover { color: var(--ink); }
+
+.admin-msg { padding: 12px 14px; margin-bottom: 24px; border: var(--line); font-size: 14px; font-weight: 500; }
+.admin-msg.is-error { background: var(--ink); color: var(--bg); }
+
+/* 공연 목록 */
+.admin-list { border-top: var(--line); }
+.admin-list li {
+  display: grid; grid-template-columns: 120px 1fr auto; gap: 6px 18px; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--ink);
+}
+.admin-list li.is-past { color: var(--muted); }
+.admin-list .a-date { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.admin-list .a-date small { display: block; font-weight: 500; font-size: 11px; text-transform: uppercase; }
+.admin-list .a-title { font-weight: 600; font-size: 16px; }
+.admin-list .a-sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.admin-list .a-btns { display: flex; gap: 6px; }
+.admin-list .a-btns button {
+  background: none; border: var(--line); padding: 6px 10px; cursor: pointer; font-size: 12px; font-weight: 600;
+}
+.admin-list .a-btns button:hover { background: var(--ink); color: var(--bg); }
+.admin-list .a-empty { display: block; color: var(--muted); }
+
+/* 언어별 입력 표 */
+.admin-langs { border-top: var(--line); margin-bottom: 28px; }
+.admin-langs__head, .admin-langs__row {
+  display: grid; grid-template-columns: 140px repeat(3, 1fr); gap: 10px; align-items: center;
+}
+.admin-langs__head { padding: 10px 0 4px; }
+.admin-langs__row { padding: 8px 0; border-bottom: 1px solid var(--ink); }
+.admin-langs input, .admin-event .field input {
+  width: 100%; min-width: 0; background: transparent; border: 0; border-bottom: var(--line); border-radius: 0;
+  font: inherit; font-size: 15px; padding: 8px 0; color: var(--ink);
+}
+.admin-langs input:focus { outline: none; border-bottom-width: 3px; }
+.admin-event .form { margin: 0 0 24px; }
+.admin-actions { display: flex; align-items: center; gap: 18px; }
+
+@container (max-width: 700px) {
+  .admin-langs__head { display: none; }
+  .admin-langs__row { grid-template-columns: 1fr; gap: 4px; }
+  .admin-list li { grid-template-columns: 1fr; }
+}
