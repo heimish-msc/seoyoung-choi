@@ -41,8 +41,25 @@
     if (/Bucket not found/i.test(m)) return "사진 저장소가 아직 없습니다. Supabase 에서 supabase/schema-content.sql 을 실행해 주세요.";
     if (/row-level security|permission|Unauthorized/i.test(m)) return "이 계정에는 수정 권한이 없습니다. 관리자 이메일로 등록되어 있는지 확인해 주세요.";
     if (/Password should be/i.test(m)) return "비밀번호가 너무 짧거나 단순합니다.";
+    if (/different from the old password/i.test(m)) return "이전과 다른 새 비밀번호를 입력해 주세요.";
+    if (/Auth session missing|session.*expired/i.test(m)) return "인증 시간이 지났습니다. 재설정 메일을 다시 받아 링크를 눌러 주세요.";
+    if (/rate limit/i.test(m)) return "메일을 너무 자주 요청했습니다. 잠시(약 1시간) 후 다시 시도해 주세요.";
+    if (/not authorized|Email address .* cannot be used/i.test(m)) return "이 이메일로는 메일을 보낼 수 없습니다. Supabase 메일 발송 설정(SMTP)을 확인해 주세요.";
     return "오류가 발생했습니다. 잠시 후 다시 시도해 주세요." + (m ? ` (${m})` : "");
   };
+
+  /* ---------------------------------------------------- 메일 링크 오류 */
+  // 재설정 메일 링크가 만료됐거나 이미 사용된 경우 Supabase 가 주소 뒤에 오류를 붙여 돌려보냄
+  (function showLinkError() {
+    const q = new URLSearchParams(location.hash.slice(1) || location.search.slice(1));
+    const code = q.get("error_code") || q.get("error");
+    if (!code) return;
+    const text = /otp_expired|expired|invalid/i.test(code + " " + (q.get("error_description") || ""))
+      ? "메일 링크가 만료되었거나 이미 사용되었습니다. '비밀번호를 잊으셨나요?'에서 재설정 메일을 다시 받아 가장 최근 메일의 링크를 눌러 주세요."
+      : `메일 링크로 로그인하지 못했습니다. (${q.get("error_description") || code})`;
+    history.replaceState(null, "", location.pathname);
+    setTimeout(() => msg(text, true), 0);
+  })();
 
   /* ---------------------------------------------------- auth */
   sb.auth.onAuthStateChange((event, session) => {
@@ -66,7 +83,9 @@
   $("#form-forgot").addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = new FormData(e.target).get("email");
-    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    // 메일 링크를 누르면 돌아올 관리자 페이지 주소 (…/admin/ 형태로 고정)
+    const redirectTo = location.origin + location.pathname.replace(/index\.html$/, "");
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
     if (error) return msg(errText(error), true);
     msg("재설정 메일을 보냈습니다. 메일함을 확인해 주세요.");
     show("login");

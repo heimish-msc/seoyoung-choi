@@ -4,6 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
+  <!-- 주소가 …/admin 처럼 / 없이 열리면 아래 파일들을 못 찾으므로 …/admin/ 로 다시 열기 -->
+  <script>
+    if (!location.pathname.endsWith("/") && !location.pathname.endsWith(".html")) {
+      location.replace(location.pathname + "/" + location.search + location.hash);
+    }
+  </script>
   <title>관리자 — Seoyoung Choi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
